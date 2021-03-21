@@ -1,6 +1,6 @@
 <template>
     <a-layout-footer style="text-align: center">
-        陈霖电子书
+        陈霖の电子书
     </a-layout-footer>
 </template>
 
