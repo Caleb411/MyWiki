@@ -1,17 +1,14 @@
 package com.chenlin.wiki.controller;
 
-import com.chenlin.wiki.domain.Ebook;
-import com.chenlin.wiki.req.EbookReq;
+import com.chenlin.wiki.req.EbookQueryReq;
+import com.chenlin.wiki.req.EbookSaveReq;
 import com.chenlin.wiki.resp.CommonResp;
-import com.chenlin.wiki.resp.EbookResp;
+import com.chenlin.wiki.resp.EbookQueryResp;
 import com.chenlin.wiki.resp.PageResp;
 import com.chenlin.wiki.service.EbookService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController
 @RequestMapping("/ebook")
@@ -21,10 +18,17 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list")
-    public CommonResp<PageResp<EbookResp>> list(EbookReq req) {
-        CommonResp<PageResp<EbookResp>> resp = new CommonResp<>();
-        PageResp<EbookResp> list = ebookService.list(req);
+    public CommonResp<PageResp<EbookQueryResp>> list(EbookQueryReq req) {
+        CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
+        PageResp<EbookQueryResp> list = ebookService.list(req);
         resp.setContent(list);
+        return resp;
+    }
+
+    @PostMapping("/save")
+    public CommonResp<?> save(@RequestBody EbookSaveReq req) {  // 如果前端以json方式提交数据这里要加这个注解
+        CommonResp<?> resp = new CommonResp<>();
+        ebookService.save(req);
         return resp;
     }
 }
