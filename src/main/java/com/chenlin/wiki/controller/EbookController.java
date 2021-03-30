@@ -27,7 +27,7 @@ public class EbookController {
     }
 
     @PostMapping("/save")
-    public CommonResp<?> save(@RequestBody EbookSaveReq req) {  // 如果前端以json方式提交数据这里要加这个注解
+    public CommonResp<?> save(@Valid @RequestBody EbookSaveReq req) {  // 如果前端以json方式提交数据这里要加这个注解
         CommonResp<?> resp = new CommonResp<>();
         ebookService.save(req);
         return resp;
