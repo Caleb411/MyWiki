@@ -69,6 +69,7 @@
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue';
   import axios from 'axios';
+  import { message } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'AdminEbook',
@@ -132,11 +133,15 @@
         }).then((response) => {
           loading.value = false;
           const data = response.data;
-          ebooks.value = data.content.list;
+          if (data.success) {
+            ebooks.value = data.content.list;
 
-          // 重置分页按钮
-          pagination.value.current = params.page;
-          pagination.value.total = data.content.total;
+            // 重置分页按钮
+            pagination.value.current = params.page;
+            pagination.value.total = data.content.total;
+          } else {
+            message.error(data.message);
+          }
         });
       };
 
@@ -144,7 +149,7 @@
        * 表格点击页码时触发
        */
       const handleTableChange = (pagination: any) => {
-        console.log("看看自带的分页参数都有啥：" + pagination);
+        console.log("看看自带的分页参数都有啥：" + pagination.current + " " + pagination.pageSize);
         handleQuery({
           page: pagination.current,
           size: pagination.pageSize
