@@ -1,6 +1,7 @@
 package com.chenlin.wiki.resp;
 
 public class EbookQueryResp {
+
     private Long id;
 
     private String name;
