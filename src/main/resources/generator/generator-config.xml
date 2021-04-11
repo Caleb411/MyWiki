@@ -22,9 +22,9 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://rm-uf6g1v5dn7k37rpctco.mysql.rds.aliyuncs.com:3306/wikidev?serverTimezone=Asia/Shanghai"
-                        userId="wikidev"
-                        password="nA_6tieKJbNG49K">
+                        connectionURL="jdbc:mysql://localhost:3306/wikidev?serverTimezone=Asia/Shanghai"
+                        userId="root"
+                        password="root">
         </jdbcConnection>
 
         <!-- domain类的位置 -->
@@ -42,8 +42,8 @@
 
         <!--<table tableName="demo" domainObjectName="Demo"/>-->
         <!--<table tableName="ebook"/>-->
-        <table tableName="category"/>
-        <!--<table tableName="doc"/>-->
+        <!--<table tableName="category"/>-->
+        <table tableName="doc"/>
         <!--<table tableName="content"/>-->
         <!--<table tableName="user"/>-->
         <!--<table tableName="ebook_snapshot"/>-->
