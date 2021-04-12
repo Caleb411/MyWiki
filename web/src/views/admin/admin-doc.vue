@@ -6,6 +6,13 @@
       <p>
         <a-form layout="inline" :model="param">
           <a-form-item>
+            <router-link to="/admin/ebook">
+              <a-button type="primary">
+                返回
+              </a-button>
+            </router-link>
+          </a-form-item>
+          <a-form-item>
             <a-button type="primary" @click="handleQuery()">
               刷新
             </a-button>
