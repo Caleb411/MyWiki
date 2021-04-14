@@ -340,6 +340,9 @@
       onMounted(() => {
         handleQuery();
         editor.create();
+        setTimeout(function () {
+          add()
+        }, 100)
       });
 
       return {
