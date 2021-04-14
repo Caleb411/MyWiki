@@ -183,7 +183,8 @@
           modalLoading.value = false;
           const data = response.data;
           if (data.success) {
-            modalVisible.value = false;
+            // modalVisible.value = false;
+            message.success("保存成功");
 
             // 重新加载列表
             handleQuery();
@@ -278,6 +279,8 @@
        * 编辑
        */
       const edit = (record: any) => {
+        // 清空富文本框
+        editor.txt.html("");
         modalVisible.value = true;
         doc.value = Tool.copy(record);
         handleQueryContent();
@@ -294,6 +297,8 @@
        * 新增
        */
       const add = () => {
+        // 清空富文本框
+        editor.txt.html("");
         modalVisible.value = true;
         doc.value = {
           ebookId: route.query.ebookId
