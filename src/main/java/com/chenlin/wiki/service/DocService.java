@@ -1,6 +1,7 @@
 package com.chenlin.wiki.service;
 
 import com.chenlin.wiki.domain.Content;
+import com.chenlin.wiki.domain.ContentExample;
 import com.chenlin.wiki.domain.Doc;
 import com.chenlin.wiki.domain.DocExample;
 import com.chenlin.wiki.mapper.ContentMapper;
@@ -98,8 +99,12 @@ public class DocService {
 
     public void delete(List<String> ids) {
         DocExample docExample = new DocExample();
-        DocExample.Criteria criteria = docExample.createCriteria();
-        criteria.andIdIn(ids);
+        DocExample.Criteria docExampleCriteria = docExample.createCriteria();
+        docExampleCriteria.andIdIn(ids);
         docMapper.deleteByExample(docExample);
+        ContentExample contentExample = new ContentExample();
+        ContentExample.Criteria contentExampleCriteria = contentExample.createCriteria();
+        contentExampleCriteria.andIdIn(ids);
+        contentMapper.deleteByExample(contentExample);
     }
 }

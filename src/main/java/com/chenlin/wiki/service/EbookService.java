@@ -1,7 +1,8 @@
 package com.chenlin.wiki.service;
 
-import com.chenlin.wiki.domain.Ebook;
-import com.chenlin.wiki.domain.EbookExample;
+import com.chenlin.wiki.domain.*;
+import com.chenlin.wiki.mapper.ContentMapper;
+import com.chenlin.wiki.mapper.DocMapper;
 import com.chenlin.wiki.mapper.EbookMapper;
 import com.chenlin.wiki.req.EbookQueryReq;
 import com.chenlin.wiki.req.EbookSaveReq;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +28,12 @@ public class EbookService {
     
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -73,5 +81,21 @@ public class EbookService {
 
     public void delete(Long id) {
         ebookMapper.deleteByPrimaryKey(id);
+        DocExample docExample = new DocExample();
+        DocExample.Criteria docExampleCriteria = docExample.createCriteria();
+        docExampleCriteria.andEbookIdEqualTo(id);
+        List<Doc> docs = docMapper.selectByExample(docExample);
+        if (docs.size() != 0) {
+            List<String> ids = new ArrayList<>();
+            for (Doc doc: docs) {
+                ids.add(String.valueOf(doc.getId()));
+            }
+            docExampleCriteria.andIdIn(ids);
+            docMapper.deleteByExample(docExample);
+            ContentExample contentExample = new ContentExample();
+            ContentExample.Criteria contentExampleCriteria = contentExample.createCriteria();
+            contentExampleCriteria.andIdIn(ids);
+            contentMapper.deleteByExample(contentExample);
+        }
     }
 }
