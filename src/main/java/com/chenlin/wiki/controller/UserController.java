@@ -6,6 +6,7 @@ import com.chenlin.wiki.resp.CommonResp;
 import com.chenlin.wiki.resp.UserQueryResp;
 import com.chenlin.wiki.resp.PageResp;
 import com.chenlin.wiki.service.UserService;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,6 +29,7 @@ public class UserController {
 
     @PostMapping("/save")
     public CommonResp<?> save(@Valid @RequestBody UserSaveReq req) {  // 如果前端以json方式提交数据这里要加这个注解
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp<?> resp = new CommonResp<>();
         userService.save(req);
         return resp;

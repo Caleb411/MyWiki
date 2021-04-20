@@ -13,7 +13,7 @@ public class SnowFlake {
     /**
      * 起始的时间戳
      */
-    private final static long START_STMP = 1609459200000L; // 2021-01-01 00:00:00
+    private final static long START_STAMP = 1609459200000L; // 2021-01-01 00:00:00
 
     /**
      * 每一部分占用的位数
@@ -34,12 +34,12 @@ public class SnowFlake {
      */
     private final static long MACHINE_LEFT = SEQUENCE_BIT;
     private final static long DATACENTER_LEFT = SEQUENCE_BIT + MACHINE_BIT;
-    private final static long TIMESTMP_LEFT = DATACENTER_LEFT + DATACENTER_BIT;
+    private final static long TIMESTAMP_LEFT = DATACENTER_LEFT + DATACENTER_BIT;
 
     private long datacenterId = 1;  //数据中心
     private long machineId = 1;     //机器标识
     private long sequence = 0L; //序列号
-    private long lastStmp = -1L;//上一次时间戳
+    private long lastStamp = -1L;//上一次时间戳
 
     public SnowFlake() {
     }
@@ -61,12 +61,12 @@ public class SnowFlake {
      * @return
      */
     public synchronized long nextId() {
-        long currStmp = getNewstmp();
-        if (currStmp < lastStmp) {
+        long currStmp = getNewStamp();
+        if (currStmp < lastStamp) {
             throw new RuntimeException("Clock moved backwards.  Refusing to generate id");
         }
 
-        if (currStmp == lastStmp) {
+        if (currStmp == lastStamp) {
             //相同毫秒内，序列号自增
             sequence = (sequence + 1) & MAX_SEQUENCE;
             //同一毫秒的序列数已经达到最大
@@ -78,23 +78,23 @@ public class SnowFlake {
             sequence = 0L;
         }
 
-        lastStmp = currStmp;
+        lastStamp = currStmp;
 
-        return (currStmp - START_STMP) << TIMESTMP_LEFT //时间戳部分
+        return (currStmp - START_STAMP) << TIMESTAMP_LEFT //时间戳部分
                 | datacenterId << DATACENTER_LEFT       //数据中心部分
                 | machineId << MACHINE_LEFT             //机器标识部分
                 | sequence;                             //序列号部分
     }
 
     private long getNextMill() {
-        long mill = getNewstmp();
-        while (mill <= lastStmp) {
-            mill = getNewstmp();
+        long mill = getNewStamp();
+        while (mill <= lastStamp) {
+            mill = getNewStamp();
         }
         return mill;
     }
 
-    private long getNewstmp() {
+    private long getNewStamp() {
         return System.currentTimeMillis();
     }
 
