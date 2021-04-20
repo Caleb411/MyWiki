@@ -83,6 +83,7 @@ public class UserService {
         } else {
             // 更新
             user.setLoginName(null);
+            user.setPassword(null);
             userMapper.updateByPrimaryKeySelective(user);   // 有选择性：值为空则不更新
         }
     }
