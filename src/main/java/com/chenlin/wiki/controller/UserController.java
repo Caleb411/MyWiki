@@ -1,6 +1,7 @@
 package com.chenlin.wiki.controller;
 
 import com.chenlin.wiki.req.UserQueryReq;
+import com.chenlin.wiki.req.UserResetPasswordReq;
 import com.chenlin.wiki.req.UserSaveReq;
 import com.chenlin.wiki.resp.CommonResp;
 import com.chenlin.wiki.resp.UserQueryResp;
@@ -32,6 +33,14 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp<?> resp = new CommonResp<>();
         userService.save(req);
+        return resp;
+    }
+
+    @PostMapping("/reset-password")
+    public CommonResp<?> resetPassword(@Valid @RequestBody UserResetPasswordReq req) {  // 如果前端以json方式提交数据这里要加这个注解
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<?> resp = new CommonResp<>();
+        userService.resetPassword(req);
         return resp;
     }
 

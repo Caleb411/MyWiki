@@ -5,6 +5,7 @@ import com.chenlin.wiki.exception.BusinessException;
 import com.chenlin.wiki.exception.BusinessExceptionCode;
 import com.chenlin.wiki.mapper.UserMapper;
 import com.chenlin.wiki.req.UserQueryReq;
+import com.chenlin.wiki.req.UserResetPasswordReq;
 import com.chenlin.wiki.req.UserSaveReq;
 import com.chenlin.wiki.resp.UserQueryResp;
 import com.chenlin.wiki.resp.PageResp;
@@ -86,6 +87,14 @@ public class UserService {
             user.setPassword(null);
             userMapper.updateByPrimaryKeySelective(user);   // 有选择性：值为空则不更新
         }
+    }
+
+    /**
+     * 修改密码
+     */
+    public void resetPassword(UserResetPasswordReq req) {
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);   // 有选择性：值为空则不更新
     }
 
     public void delete(Long id) {
