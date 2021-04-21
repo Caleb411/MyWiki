@@ -1,9 +1,11 @@
 package com.chenlin.wiki.controller;
 
+import com.chenlin.wiki.req.UserLoginReq;
 import com.chenlin.wiki.req.UserQueryReq;
 import com.chenlin.wiki.req.UserResetPasswordReq;
 import com.chenlin.wiki.req.UserSaveReq;
 import com.chenlin.wiki.resp.CommonResp;
+import com.chenlin.wiki.resp.UserLoginResp;
 import com.chenlin.wiki.resp.UserQueryResp;
 import com.chenlin.wiki.resp.PageResp;
 import com.chenlin.wiki.service.UserService;
@@ -41,6 +43,15 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp<?> resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+
+    @PostMapping("/login")
+    public CommonResp<UserLoginResp> login(@Valid @RequestBody UserLoginReq req) {  // 如果前端以json方式提交数据这里要加这个注解
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 

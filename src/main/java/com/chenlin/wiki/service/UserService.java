@@ -4,9 +4,11 @@ import com.chenlin.wiki.domain.*;
 import com.chenlin.wiki.exception.BusinessException;
 import com.chenlin.wiki.exception.BusinessExceptionCode;
 import com.chenlin.wiki.mapper.UserMapper;
+import com.chenlin.wiki.req.UserLoginReq;
 import com.chenlin.wiki.req.UserQueryReq;
 import com.chenlin.wiki.req.UserResetPasswordReq;
 import com.chenlin.wiki.req.UserSaveReq;
+import com.chenlin.wiki.resp.UserLoginResp;
 import com.chenlin.wiki.resp.UserQueryResp;
 import com.chenlin.wiki.resp.PageResp;
 import com.chenlin.wiki.util.CopyUtil;
@@ -110,6 +112,28 @@ public class UserService {
             return null;
         } else {
             return userList.get(0);
+        }
+    }
+
+    /**
+     * 登录
+     */
+    public UserLoginResp login(UserLoginReq req) {
+        User userDb = selectByLoginName(req.getLoginName());
+        if (ObjectUtils.isEmpty(userDb)) {
+            // 用户名不存在
+            LOG.info("用户名不存在，{}", req.getLoginName());
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        } else {
+            if (userDb.getPassword().equals(req.getPassword())) {
+                // 登录成功
+                UserLoginResp userLoginResp = CopyUtil.copy(userDb, UserLoginResp.class);
+                return userLoginResp;
+            } else {
+                // 密码不对
+                LOG.info("密码不对，输入密码：{}，数据库密码：{}", req.getPassword(), userDb.getPassword());
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
         }
     }
 }
