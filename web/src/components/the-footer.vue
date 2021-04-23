@@ -1,6 +1,7 @@
 <template>
     <a-layout-footer style="text-align: center">
-        {{user.name}}の电子书
+        <span v-show="user.id">{{user.name}}の知识库</span>
+        <span v-show="!user.id">个人知识库系统</span>
     </a-layout-footer>
 </template>
 
