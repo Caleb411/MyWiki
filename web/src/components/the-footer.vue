@@ -1,7 +1,7 @@
 <template>
     <a-layout-footer style="text-align: center">
-        <span v-show="user.id">{{user.name}}の知识库</span>
-        <span v-show="!user.id">个人知识库系统</span>
+      <span v-show="!user.id">陈霖の知识库</span>
+      <span v-show="user.id">当前管理员：{{user.name}}</span>
     </a-layout-footer>
 </template>
 

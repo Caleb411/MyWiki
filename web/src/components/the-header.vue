@@ -47,10 +47,10 @@
     >
       <a-form :model="loginUser" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
         <a-form-item label="登录名">
-          <a-input v-model:value="loginUser.loginName" />
+          <a-input v-model:value="loginName" />
         </a-form-item>
         <a-form-item label="密码">
-          <a-input v-model:value="loginUser.password" type="password" />
+          <a-input v-model:value="password" type="password" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -73,10 +73,14 @@ export default defineComponent({
     const user = computed(() => store.state.user);
 
     // 用来登录
-    const loginUser = ref({
-      loginName: "test",
-      password: "test123"
-    });
+    const loginUser = {
+      loginName: "",
+      password: ""
+    };
+
+    const loginName = ref("test");
+    const password = ref("test");
+
     const loginModalVisible = ref(false);
     const loginModalLoading = ref(false);
     const showLoginModal = () => {
@@ -87,8 +91,9 @@ export default defineComponent({
     const login = () => {
       console.log("开始登录");
       loginModalLoading.value = true;
-      loginUser.value.password = hexMd5(loginUser.value.password + KEY);
-      axios.post('/user/login', loginUser.value).then((response) => {
+      loginUser.loginName = loginName.value;
+      loginUser.password = hexMd5(password.value + KEY);
+      axios.post('/user/login', loginUser).then((response) => {
         loginModalLoading.value = false;
         const data = response.data;
         if (data.success) {
@@ -119,10 +124,11 @@ export default defineComponent({
       loginModalVisible,
       loginModalLoading,
       showLoginModal,
-      loginUser,
       login,
       user,
-      logout
+      logout,
+      loginName,
+      password
     }
   }
 });
