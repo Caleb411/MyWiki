@@ -6,6 +6,7 @@ import com.chenlin.wiki.domain.Doc;
 import com.chenlin.wiki.domain.DocExample;
 import com.chenlin.wiki.mapper.ContentMapper;
 import com.chenlin.wiki.mapper.DocMapper;
+import com.chenlin.wiki.mapper.DocMapperCust;
 import com.chenlin.wiki.req.DocQueryReq;
 import com.chenlin.wiki.req.DocSaveReq;
 import com.chenlin.wiki.resp.DocQueryResp;
@@ -29,6 +30,9 @@ public class DocService {
     
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private DocMapperCust docMapperCust;
 
     @Resource
     private ContentMapper contentMapper;
@@ -79,6 +83,8 @@ public class DocService {
         if (ObjectUtils.isEmpty(req.getId())) {
             // 新增
             doc.setId(snowFlake.nextId());
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
 
             content.setId(doc.getId());
@@ -110,8 +116,13 @@ public class DocService {
 
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
-        if (content == null) return "";
-        return content.getContent();
+        // 文档阅读数+1
+        docMapperCust.increaseViewCount(id);
+        if (ObjectUtils.isEmpty(content)) {
+            return "";
+        } else{
+            return content.getContent();
+        }
     }
 
 }
