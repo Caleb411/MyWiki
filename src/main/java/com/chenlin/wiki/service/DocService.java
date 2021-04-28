@@ -125,4 +125,7 @@ public class DocService {
         }
     }
 
+    public void vote(Long id) {
+        docMapperCust.increaseVoteCount(id);
+    }
 }
