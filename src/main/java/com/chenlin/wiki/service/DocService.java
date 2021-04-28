@@ -4,6 +4,8 @@ import com.chenlin.wiki.domain.Content;
 import com.chenlin.wiki.domain.ContentExample;
 import com.chenlin.wiki.domain.Doc;
 import com.chenlin.wiki.domain.DocExample;
+import com.chenlin.wiki.exception.BusinessException;
+import com.chenlin.wiki.exception.BusinessExceptionCode;
 import com.chenlin.wiki.mapper.ContentMapper;
 import com.chenlin.wiki.mapper.DocMapper;
 import com.chenlin.wiki.mapper.DocMapperCust;
@@ -12,6 +14,8 @@ import com.chenlin.wiki.req.DocSaveReq;
 import com.chenlin.wiki.resp.DocQueryResp;
 import com.chenlin.wiki.resp.PageResp;
 import com.chenlin.wiki.util.CopyUtil;
+import com.chenlin.wiki.util.RedisUtil;
+import com.chenlin.wiki.util.RequestContext;
 import com.chenlin.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -39,6 +43,9 @@ public class DocService {
 
     @Resource
     private SnowFlake snowFlake;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -126,6 +133,13 @@ public class DocService {
     }
 
     public void vote(Long id) {
-        docMapperCust.increaseVoteCount(id);
+        // docMapperCust.increaseVoteCount(id);
+        // 远程IP+doc.id作为key，24小时内不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 3600 * 24)) {
+            docMapperCust.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 }

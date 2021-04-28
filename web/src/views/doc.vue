@@ -14,7 +14,7 @@
           >
           </a-tree>
         </a-col>
-        <a-col :span="18">
+        <a-col :span="18" v-show="doc.id">
           <div>
             <h2>{{doc.name}}</h2>
             <div>
