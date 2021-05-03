@@ -1,14 +1,12 @@
 package com.chenlin.wiki.service;
 
-import com.chenlin.wiki.domain.Content;
-import com.chenlin.wiki.domain.ContentExample;
-import com.chenlin.wiki.domain.Doc;
-import com.chenlin.wiki.domain.DocExample;
+import com.chenlin.wiki.domain.*;
 import com.chenlin.wiki.exception.BusinessException;
 import com.chenlin.wiki.exception.BusinessExceptionCode;
 import com.chenlin.wiki.mapper.ContentMapper;
 import com.chenlin.wiki.mapper.DocMapper;
 import com.chenlin.wiki.mapper.DocMapperCust;
+import com.chenlin.wiki.mapper.EbookMapper;
 import com.chenlin.wiki.req.DocQueryReq;
 import com.chenlin.wiki.req.DocSaveReq;
 import com.chenlin.wiki.resp.DocQueryResp;
@@ -17,6 +15,7 @@ import com.chenlin.wiki.util.CopyUtil;
 import com.chenlin.wiki.util.RedisUtil;
 import com.chenlin.wiki.util.RequestContext;
 import com.chenlin.wiki.util.SnowFlake;
+import com.chenlin.wiki.websocket.WebSocketServer;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -42,10 +41,16 @@ public class DocService {
     private ContentMapper contentMapper;
 
     @Resource
+    private EbookMapper ebookMapper;
+
+    @Resource
     private SnowFlake snowFlake;
 
     @Resource
     private RedisUtil redisUtil;
+
+    @Resource
+    private WebSocketServer webSocketServer;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -141,6 +146,11 @@ public class DocService {
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
+
+        // 推送消息
+        Doc docDb = docMapper.selectByPrimaryKey(id);
+        Ebook ebook = ebookMapper.selectByPrimaryKey(docDb.getEbookId());
+        webSocketServer.sendInfo("【" + ebook.getName() + "】中的【" + docDb.getName() + "】被点赞啦！");
     }
 
     public void updateEbookInfo() {
