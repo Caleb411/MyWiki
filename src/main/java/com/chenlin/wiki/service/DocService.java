@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -91,6 +92,7 @@ public class DocService {
     /**
      * 保存
      */
+    @Transactional
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
         Content content = CopyUtil.copy(req, Content.class);
@@ -117,6 +119,7 @@ public class DocService {
         docMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional
     public void delete(List<String> ids) {
         DocExample docExample = new DocExample();
         DocExample.Criteria docExampleCriteria = docExample.createCriteria();
