@@ -20,6 +20,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -50,7 +51,7 @@ public class DocService {
     private RedisUtil redisUtil;
 
     @Resource
-    private WebSocketServer webSocketServer;
+    private WsService wsService;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -137,6 +138,9 @@ public class DocService {
         }
     }
 
+    /**
+     * 点赞
+     */
     public void vote(Long id) {
         // docMapperCust.increaseVoteCount(id);
         // 远程IP+doc.id作为key，24小时内不能重复
@@ -150,7 +154,7 @@ public class DocService {
         // 推送消息
         Doc docDb = docMapper.selectByPrimaryKey(id);
         Ebook ebook = ebookMapper.selectByPrimaryKey(docDb.getEbookId());
-        webSocketServer.sendInfo("【" + ebook.getName() + "】中的【" + docDb.getName() + "】被点赞啦！");
+        wsService.sendInfo("【" + ebook.getName() + "】中的【" + docDb.getName() + "】被点赞啦！");
     }
 
     public void updateEbookInfo() {
