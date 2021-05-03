@@ -20,6 +20,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -154,7 +155,10 @@ public class DocService {
         // 推送消息
         Doc docDb = docMapper.selectByPrimaryKey(id);
         Ebook ebook = ebookMapper.selectByPrimaryKey(docDb.getEbookId());
-        wsService.sendInfo("【" + ebook.getName() + "】中的【" + docDb.getName() + "】被点赞啦！");
+
+        // 调用异步化启动新线程时继续使用当前线程的日志流水号
+        String logId = MDC.get("LOG_ID");
+        wsService.sendInfo("【" + ebook.getName() + "】中的【" + docDb.getName() + "】被点赞啦！", logId);
     }
 
     public void updateEbookInfo() {
