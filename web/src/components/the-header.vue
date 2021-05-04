@@ -1,6 +1,6 @@
 <template>
   <a-layout-header class="header">
-    <div class="logo" />
+    <div class="logo">陈霖の知识库</div>
     <a-menu
         theme="dark"
         mode="horizontal"
@@ -135,9 +135,18 @@ export default defineComponent({
 </script>
 
 <style>
-.login-menu {
-  float: right;
-  color: white;
-  padding-left: 10px;
-}
+  .logo {
+    width: 120px;
+    height: 31px;
+    /*background: rgba(255, 255, 255, 0.2);*/
+    /*margin: 16px 28px 16px 0;*/
+    float: left;
+    color: white;
+    font-size: 18px;
+  }
+  .login-menu {
+    float: right;
+    color: white;
+    padding-left: 10px;
+  }
 </style>
