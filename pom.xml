@@ -81,7 +81,7 @@
     </dependencies>
 
     <build>
-        <finalName>/dist/${artifactId}</finalName>
+        <finalName>/dist/${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
