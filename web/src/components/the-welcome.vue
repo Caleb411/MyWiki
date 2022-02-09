@@ -71,6 +71,7 @@
             <a-col :span="12">
               <a-statistic
                 title="预计今日阅读增长"
+                v-show="isShowRate"
                 :value="statistic.todayViewIncreaseRateAbs"
                 :precision="2"
                 suffix="%"
@@ -107,6 +108,7 @@
     setup () {
       const statistic = ref();
       statistic.value = {};
+      const isShowRate = ref(true);
       const getStatistic = () => {
         axios.get('/ebook-snapshot/get-statistic').then((response) => {
           const data = response.data;
@@ -123,6 +125,7 @@
             // console.log(nowRate)
             statistic.value.todayViewIncrease = parseInt(String(statisticResp[1].viewIncrease / nowRate));
             // todayViewIncreaseRate：今日预计增长率
+            if (statisticResp[0].viewIncrease <= 0) isShowRate.value = false;
             statistic.value.todayViewIncreaseRate = (statistic.value.todayViewIncrease - statisticResp[0].viewIncrease) / statisticResp[0].viewIncrease * 100;
             statistic.value.todayViewIncreaseRateAbs = Math.abs(statistic.value.todayViewIncreaseRate);
           }
@@ -218,7 +221,8 @@
       });
 
       return {
-        statistic
+        statistic,
+        isShowRate
       }
     }
   });
