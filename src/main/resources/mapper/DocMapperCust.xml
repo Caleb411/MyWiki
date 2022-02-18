@@ -15,6 +15,11 @@
     </update>
 
     <update id="updateEbookInfo">
+        update ebook
+        set doc_count  = 0,
+            view_count = 0,
+            vote_count = 0;
+
         update ebook t1,
             (select ebook_id, count(1) doc_count, sum(view_count) view_count, sum(vote_count) vote_count
              from doc
