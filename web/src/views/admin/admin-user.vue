@@ -172,11 +172,18 @@ export default defineComponent({
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
+
+      if (Tool.isEmpty(user.value.password)) {
+        message.error("【密码】不能为空");
+        return;
+      }
+
       modalLoading.value = true;
 
-      user.value.password = hexMd5(user.value.password + KEY);
+      const saveUser = Tool.copy(user.value);
+      saveUser.password = hexMd5(user.value.password + KEY);
 
-      axios.post("/user/save", user.value).then((response) => {
+      axios.post("/user/save", saveUser).then((response) => {
         modalLoading.value = false;
         const data = response.data; // data = commonResp
         if (data.success) {
@@ -205,11 +212,18 @@ export default defineComponent({
     const resetModalVisible = ref(false);
     const resetModalLoading = ref(false);
     const handleResetModalOk = () => {
+
+      if (Tool.isEmpty(user.value.password)) {
+        message.error("【密码】不能为空");
+        return;
+      }
+
       resetModalLoading.value = true;
 
-      user.value.password = hexMd5(user.value.password + KEY);
+      const saveUser = Tool.copy(user.value);
+      saveUser.password = hexMd5(user.value.password + KEY);
 
-      axios.post("/user/reset-password", user.value).then((response) => {
+      axios.post("/user/reset-password", saveUser).then((response) => {
         resetModalLoading.value = false;
         const data = response.data; // data = commonResp
         if (data.success) {
